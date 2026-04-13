@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promesas Manuel Lustres/Sánchez</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-deep: #0a0e1a;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2235;
+            --primary: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-glow: rgba(59, 130, 246, 0.15);
+            --accent: #f59e0b;
+            --accent-glow: rgba(245, 158, 11, 0.2);
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.15);
+            --success: #10b981;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --border: #1e293b;
+            --border-light: #334155;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 4px 24px rgba(0,0,0,.3);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== ANIMATED BG ===== */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(59,130,246,.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59,130,246,.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(ellipse, rgba(59,130,246,.08) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 2.5rem 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .hero-text {
+            min-width: 0;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: var(--danger-glow);
+            border: 1px solid rgba(239,68,68,.3);
+            color: #fca5a5;
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            padding: .4rem 1rem;
+            border-radius: 100px;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-badge .pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(239,68,68,.4); }
+            50% { opacity: .7; box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: -.04em;
+            line-height: 1.05;
+            margin-bottom: .5rem;
+            text-transform: uppercase;
+        }
+
+        .hero h1 .accent {
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: clamp(.95rem, 2vw, 1.1rem);
+            color: var(--text-muted);
+            font-weight: 400;
+            max-width: 480px;
+        }
+
+        /* ===== HERO IMAGES — TRANSITION ===== */
+        .hero-image {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            position: relative;
+        }
+
+        .hero-image .avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .hero-image .avatar-wrap img {
+            width: clamp(110px, 14vw, 170px);
+            height: clamp(110px, 14vw, 170px);
+            object-fit: cover;
+            object-position: top center;
+            border-radius: 50%;
+            border: 3px solid var(--border-light);
+            display: block;
+        }
+
+        /* Manu — left, slightly overlapping, approaching */
+        .avatar-manu {
+            z-index: 2;
+            animation: approach 3s ease-in-out infinite alternate;
+        }
+
+        .avatar-manu img {
+            box-shadow: 0 0 30px rgba(59,130,246,.2), 0 0 60px rgba(59,130,246,.08);
+            filter: contrast(1.05) saturate(1.1);
+        }
+
+        @keyframes approach {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(18px); }
+        }
+
+        /* Arrow / morph indicator between them */
+        .morph-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .35rem;
+            z-index: 3;
+            margin: 0 .25rem;
+            animation: arrowPulse 2s ease-in-out infinite;
+            background: rgba(239,68,68,.08);
+            border: 1px solid rgba(239,68,68,.25);
+            border-radius: 12px;
+            padding: .5rem .6rem;
+        }
+
+        .morph-arrow svg {
+            filter: drop-shadow(0 0 8px rgba(239,68,68,.5));
+        }
+
+        .morph-arrow .morph-label {
+            font-size: .65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: var(--danger);
+            white-space: nowrap;
+            text-shadow: 0 0 10px rgba(239,68,68,.4);
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% { opacity: .7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        /* Pedro — right, the "final form" */
+        .avatar-pedro {
+            z-index: 1;
+            margin-bottom: 1.25rem;
+        }
+
+        .avatar-pedro img {
+            box-shadow: 0 0 40px rgba(239,68,68,.15), 0 0 80px rgba(239,68,68,.06);
+            filter: grayscale(20%) contrast(1.05);
+            opacity: .85;
+        }
+
+        .avatar-pedro::after {
+            content: 'FINAL BOSS';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: .75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: #fca5a5;
+            background: rgba(239,68,68,.2);
+            border: 2px solid rgba(239,68,68,.45);
+            padding: .3rem .8rem;
+            border-radius: 100px;
+            white-space: nowrap;
+            text-shadow: 0 0 8px rgba(239,68,68,.4);
+            box-shadow: 0 0 15px rgba(239,68,68,.15);
+        }
+
+        .hero-image .caption {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transform: translateY(calc(100% + 1.25rem));
+            text-align: center;
+            font-size: .8rem;
+            color: var(--accent);
+            font-style: italic;
+            font-weight: 600;
+            letter-spacing: .03em;
+            text-shadow: 0 0 12px rgba(245,158,11,.3);
+        }
+
+        /* Space for the FINAL BOSS badge + caption below */
+        .hero-image {
+            margin-bottom: 3.5rem;
+        }
+
+        /* ===== COUNTDOWN ===== */
+        .countdown-section {
+            margin: 2rem 0 2.5rem;
+        }
+
+        .countdown-label {
+            text-align: center;
+            font-size: .8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: clamp(.5rem, 2vw, 1rem);
+            flex-wrap: wrap;
+        }
+
+        .countdown-unit {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem 1rem;
+            min-width: clamp(70px, 15vw, 110px);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .3s;
+        }
+
+        .countdown-unit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            opacity: .6;
+        }
+
+        .countdown-unit:hover {
+            border-color: var(--border-light);
+        }
+
+        .countdown-number {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -.02em;
+            line-height: 1;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .countdown-text {
+            font-size: .7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--text-dim);
+            margin-top: .4rem;
+        }
+
+        .countdown-deadline {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: .85rem;
+            color: var(--text-muted);
+        }
+
+        .countdown-deadline strong {
+            color: var(--accent);
+        }
+
+        /* ===== EXPIRED STATE ===== */
+        .expired .countdown-unit {
+            border-color: rgba(239,68,68,.3);
+        }
+
+        .expired .countdown-unit::before {
+            background: var(--danger);
+        }
+
+        .expired .countdown-number {
+            color: var(--danger);
+        }
+
+        .expired-msg {
+            display: none;
+            text-align: center;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            background: var(--danger-glow);
+            border: 1px solid rgba(239,68,68,.3);
+            border-radius: var(--radius);
+            color: #fca5a5;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .expired .expired-msg {
+            display: block;
+        }
+
+        /* ===== BALAS LIST ===== */
+        .balas-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: .5rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -.01em;
+        }
+
+        .section-count {
+            font-size: .75rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: .3rem .8rem;
+            border-radius: 100px;
+        }
+
+        .balas-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .6rem;
+        }
+
+        .bala-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: .75rem 1rem .75rem 1.25rem;
+            transition: all .2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bala-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--danger);
+        }
+
+        .bala-card:hover {
+            border-color: var(--border-light);
+            background: var(--bg-card-hover);
+        }
+
+        .bala-card .bala-number {
+            position: absolute;
+            top: .4rem;
+            right: .75rem;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: rgba(255,255,255,.04);
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .bala-card .bala-concepto {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: .2rem;
+            color: var(--text);
+        }
+
+        .bala-card .bala-quote {
+            font-style: italic;
+            color: var(--accent);
+            font-size: .9rem;
+            margin-bottom: .4rem;
+            padding-left: .5rem;
+            border-left: 2px solid var(--accent);
+            opacity: .85;
+            line-height: 1.3;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .bala-card .bala-status {
+            display: inline-flex;
+            align-items: center;
+            gap: .25rem;
+            font-size: .6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            padding: .2rem .5rem;
+            border-radius: 100px;
+            background: var(--danger-glow);
+            color: #fca5a5;
+            border: 1px solid rgba(239,68,68,.25);
+        }
+
+        .bala-card .bala-status .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--danger);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: .5rem;
+        }
+
+        .progress-label {
+            font-size: .8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-dim);
+        }
+
+        .progress-value {
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        .progress-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 100px;
+            background: linear-gradient(90deg, var(--danger), var(--accent));
+            transition: width 1.5s ease;
+            width: 0%;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 2rem 0 3rem;
+            border-top: 1px solid var(--border);
+            margin-top: 1rem;
+        }
+
+        .footer p {
+            font-size: .8rem;
+            color: var(--text-dim);
+        }
+
+        .footer .legal {
+            margin-top: .5rem;
+            font-size: .7rem;
+            color: var(--text-dim);
+            opacity: .6;
+        }
+
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            .avatar-manu,
+            .morph-arrow,
+            .hero-badge .pulse,
+            .bala-card .bala-status .dot {
+                animation: none;
+            }
+
+            .progress-fill {
+                transition: none;
+            }
+        }
+
+        /* ===== RESPONSIVE — TABLET ===== */
+        @media (max-width: 768px) {
+            .balas-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== RESPONSIVE — MOBILE ===== */
+        @media (max-width: 640px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .hero-image {
+                order: -1;
+                justify-content: center;
+            }
+
+            .hero .subtitle {
+                margin: 0 auto;
+            }
+
+            .hero-image .avatar-wrap img {
+                width: clamp(80px, 22vw, 110px);
+                height: clamp(80px, 22vw, 110px);
+            }
+
+            .avatar-manu {
+                animation-name: approach-mobile;
+            }
+
+            @keyframes approach-mobile {
+                0%   { transform: translateX(0); }
+                100% { transform: translateX(10px); }
+            }
+
+            .morph-arrow {
+                padding: .35rem .45rem;
+            }
+
+            .morph-arrow svg:first-child {
+                width: 28px;
+                height: 28px;
+            }
+
+            .morph-arrow svg:last-of-type {
+                width: 22px;
+                height: 22px;
+            }
+
+            .hero-image .caption {
+                font-size: .7rem;
+                transform: translateY(calc(100% + 1rem));
+            }
+
+            .avatar-pedro::after {
+                font-size: .6rem;
+                padding: .2rem .6rem;
+                bottom: -8px;
+            }
+
+            .hero-image {
+                margin-bottom: 3rem;
+            }
+
+            .countdown-unit {
+                min-width: clamp(60px, 18vw, 80px);
+                padding: 1rem .75rem;
+            }
+
+            .countdown-number {
+                font-size: clamp(1.6rem, 8vw, 2rem);
+            }
+        }
+
+        /* ===== RESPONSIVE — SMALL MOBILE ===== */
+        @media (max-width: 374px) {
+            .hero-image .avatar-wrap img {
+                width: 70px;
+                height: 70px;
+            }
+
+            .morph-arrow svg:first-child {
+                width: 24px;
+                height: 24px;
+            }
+
+            .morph-arrow svg:last-of-type {
+                width: 18px;
+                height: 18px;
+            }
+
+            .morph-arrow .morph-label {
+                font-size: .55rem;
+            }
+
+            .countdown-unit {
+                min-width: 56px;
+                padding: .75rem .5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <div class="container">
+        <!-- HERO -->
+        <header class="hero">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <span class="pulse"></span>
+                    Promesas en seguimiento
+                </div>
+                <h1>Promesas<br><span class="accent">Manuel Lustres/Sánchez</span></h1>
+                <p class="subtitle">Registro oficial de compromisos pendientes de cumplimiento. El reloj corre.</p>
+            </div>
+            <div class="hero-image">
+                <div class="avatar-wrap avatar-manu">
+                    <img src="img/Manu.jpg" alt="Manuel Lustres">
+                </div>
+                <div class="morph-arrow">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="#ef4444" stroke="#0a0e1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13" stroke="#0a0e1a" stroke-width="2"/><circle cx="12" cy="16.5" r="1" fill="#0a0e1a" stroke="none"/></svg>
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+                    <span class="morph-label">Peligro</span>
+                </div>
+                <div class="avatar-wrap avatar-pedro">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Pedro_S%C3%A1nchez_in_2026.jpg" alt="Nivel final">
+                </div>
+                <div class="caption">"Próxima digievolución...."</div>
+            </div>
+        </header>
+
+        <!-- BALAS -->
+        <section class="balas-section">
+            <div class="section-header">
+                <h2 class="section-title">Las Balas</h2>
+                <span class="section-count">4 pendientes</span>
+            </div>
+            <div class="balas-list">
+
+                <!-- BALA 1 -->
+                <div class="bala-card">
+                    <span class="bala-number">#1</span>
+                    <div class="bala-concepto">Fee 11 - SinComentarios</div>
+                    <div class="bala-quote">"Si me das las llaves, tengo 2 minutos ahora entre que me sirven el café y no para dejarlo listo"</div>
+                    <span class="bala-status"><span class="dot"></span> Pendiente</span>
+                </div>
+
+                <!-- BALA 2 -->
+                <div class="bala-card">
+                    <span class="bala-number">#2</span>
+                    <div class="bala-concepto">Fijo Canarias</div>
+                    <div class="bala-quote">"¿Será que sí?"</div>
+                    <span class="bala-status"><span class="dot"></span> Pendiente</span>
+                </div>
+
+                <!-- BALA 3 -->
+                <div class="bala-card">
+                    <span class="bala-number">#3</span>
+                    <div class="bala-concepto">Producto Clear - La joya de los memes</div>
+                    <div class="bala-quote">"Since 1991"</div>
+                    <span class="bala-status"><span class="dot"></span> Pendiente</span>
+                </div>
+
+                <!-- BALA 4 -->
+                <div class="bala-card">
+                    <span class="bala-number">#4</span>
+                    <div class="bala-concepto">Implementación Wolf</div>
+                    <div class="bala-quote">"Métele un poquito de presión a IT, está retrasándose la vida y no es por nuestra parte"</div>
+                    <span class="bala-status"><span class="dot"></span> Pendiente</span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- COUNTDOWN -->
+        <section class="countdown-section" id="countdownSection">
+            <div class="countdown-label">Tiempo restante para cumplir</div>
+            <div class="countdown" id="countdown">
+                <div class="countdown-unit">
+                    <div class="countdown-number" id="days">--</div>
+                    <div class="countdown-text">Días</div>
+                </div>
+                <div class="countdown-unit">
+                    <div class="countdown-number" id="hours">--</div>
+                    <div class="countdown-text">Horas</div>
+                </div>
+                <div class="countdown-unit">
+                    <div class="countdown-number" id="minutes">--</div>
+                    <div class="countdown-text">Minutos</div>
+                </div>
+                <div class="countdown-unit">
+                    <div class="countdown-number" id="seconds">--</div>
+                    <div class="countdown-text">Segundos</div>
+                </div>
+            </div>
+            <p class="countdown-deadline">Fecha límite: <strong>30 de abril de 2026 a las 23:59h</strong></p>
+            <div class="expired-msg">TIEMPO AGOTADO &mdash; Las promesas han expirado oficialmente</div>
+        </section>
+
+        <!-- PROGRESS -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-label">Promesas cumplidas</span>
+                <span class="progress-value">0 de 4 (0%)</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <p>Registro interno de promesas pendientes &mdash; Abril 2026</p>
+            <p class="legal">Este documento tiene carácter de recordatorio amistoso. Las excusas no detienen el contador.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Fecha límite: 30 de abril 2026 a las 23:59:59
+        const DEADLINE = new Date('2026-04-30T23:59:59').getTime();
+
+        function updateCountdown() {
+            const now = Date.now();
+            const diff = DEADLINE - now;
+            const section = document.getElementById('countdownSection');
+
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                section.classList.add('expired');
+                return;
+            }
+
+            section.classList.remove('expired');
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Animate progress bar (0% for now)
+        setTimeout(() => {
+            document.getElementById('progressFill').style.width = '0%';
+        }, 500);
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
