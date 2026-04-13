@@ -650,18 +650,30 @@
                 font-size: .8rem;
             }
 
-            /* Countdown */
+            /* Countdown — force single row */
             .countdown-section {
                 margin: 1.5rem 0 2rem;
             }
 
+            .countdown {
+                flex-wrap: nowrap;
+                gap: .4rem;
+            }
+
             .countdown-unit {
-                min-width: clamp(60px, 18vw, 80px);
-                padding: 1rem .75rem;
+                min-width: 0;
+                flex: 1;
+                padding: .75rem .25rem;
+                border-radius: var(--radius-sm);
             }
 
             .countdown-number {
-                font-size: clamp(1.6rem, 8vw, 2rem);
+                font-size: clamp(1.4rem, 6vw, 1.8rem);
+            }
+
+            .countdown-text {
+                font-size: .55rem;
+                letter-spacing: .05em;
             }
 
             .countdown-deadline {
@@ -706,8 +718,11 @@
             }
 
             .countdown-unit {
-                min-width: 56px;
-                padding: .75rem .5rem;
+                padding: .6rem .2rem;
+            }
+
+            .countdown-number {
+                font-size: 1.3rem;
             }
 
             .bala-card .bala-concepto {
