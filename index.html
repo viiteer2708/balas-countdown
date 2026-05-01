@@ -191,7 +191,7 @@
             display: block;
         }
 
-        /* Manu — left, slightly overlapping, approaching */
+        /* Manu — left, approaching aggressively (almost merging) */
         .avatar-manu {
             z-index: 2;
             animation: approach 3s ease-in-out infinite alternate;
@@ -204,7 +204,18 @@
 
         @keyframes approach {
             0%   { transform: translateX(0); }
-            100% { transform: translateX(18px); }
+            100% { transform: translateX(42px); }
+        }
+
+        /* Pedro — also pulled toward Manu */
+        .avatar-pedro {
+            z-index: 1;
+            animation: approachPedro 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes approachPedro {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-22px); }
         }
 
         /* Arrow / morph indicator between them */
@@ -215,7 +226,7 @@
             align-self: center;
             gap: .35rem;
             z-index: 3;
-            margin: 0 .25rem;
+            margin: 0 -.15rem;
             animation: arrowPulse 2s ease-in-out infinite;
             background: rgba(239,68,68,.08);
             border: 1px solid rgba(239,68,68,.25);
@@ -243,10 +254,6 @@
         }
 
         /* Pedro — right, the "final form" */
-        .avatar-pedro {
-            z-index: 1;
-        }
-
         .avatar-pedro img {
             box-shadow: 0 0 40px rgba(239,68,68,.15), 0 0 80px rgba(239,68,68,.06);
             filter: grayscale(20%) contrast(1.05);
@@ -640,6 +647,7 @@
         /* ===== REDUCED MOTION ===== */
         @media (prefers-reduced-motion: reduce) {
             .avatar-manu,
+            .avatar-pedro,
             .morph-arrow,
             .hero-badge .pulse,
             .bala-card .bala-status .dot {
@@ -706,14 +714,23 @@
                 font-size: .9rem;
             }
 
-            /* Reduce approach animation distance */
+            /* Reduce approach animation distance on mobile */
             .avatar-manu {
                 animation-name: approach-mobile;
             }
 
+            .avatar-pedro {
+                animation-name: approachPedro-mobile;
+            }
+
             @keyframes approach-mobile {
                 0%   { transform: translateX(0); }
-                100% { transform: translateX(10px); }
+                100% { transform: translateX(16px); }
+            }
+
+            @keyframes approachPedro-mobile {
+                0%   { transform: translateX(0); }
+                100% { transform: translateX(-8px); }
             }
 
             .morph-arrow {
