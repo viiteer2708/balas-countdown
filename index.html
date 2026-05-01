@@ -387,18 +387,49 @@
         .expired-msg {
             display: none;
             text-align: center;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0 0;
             background: var(--danger-glow);
-            border: 1px solid rgba(239,68,68,.3);
+            border: 1px solid rgba(239,68,68,.35);
             border-radius: var(--radius);
             color: #fca5a5;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .expired-msg strong {
+            color: #fee2e2;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .expired-msg .new-date {
+            display: block;
+            margin-top: .75rem;
+            padding-top: .75rem;
+            border-top: 1px dashed rgba(239,68,68,.3);
+            font-size: .9rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .expired-msg .new-date strong {
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(245,158,11,.3);
         }
 
         .expired .expired-msg {
             display: block;
+        }
+
+        /* Negative sign on numbers when expired */
+        .expired .countdown-number::before {
+            content: '−';
+            margin-right: .15rem;
+            color: var(--danger);
+            font-weight: 700;
         }
 
         /* ===== BALAS LIST ===== */
@@ -490,6 +521,58 @@
             border-radius: 50%;
             background: var(--danger);
             animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* ===== BALA STATES — WARNING (ámbar) ===== */
+        .bala-card.warning::before {
+            background: var(--accent);
+        }
+
+        .bala-card.warning .bala-quote {
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        .bala-card.warning .bala-status {
+            background: var(--accent-glow);
+            color: #fcd34d;
+            border-color: rgba(245,158,11,.3);
+        }
+
+        .bala-card.warning .bala-status .dot {
+            background: var(--accent);
+            animation: pulseAmber 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseAmber {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(245,158,11,.4); }
+            50% { opacity: .7; box-shadow: 0 0 0 6px rgba(245,158,11,0); }
+        }
+
+        /* ===== BALA STATES — ALMOST DONE (verde) ===== */
+        .bala-card.almost-done::before {
+            background: var(--success);
+        }
+
+        .bala-card.almost-done .bala-quote {
+            color: #6ee7b7;
+            border-left-color: var(--success);
+        }
+
+        .bala-card.almost-done .bala-status {
+            background: rgba(16,185,129,.15);
+            color: #6ee7b7;
+            border-color: rgba(16,185,129,.3);
+        }
+
+        .bala-card.almost-done .bala-status .dot {
+            background: var(--success);
+            animation: pulseGreen 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGreen {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,.4); }
+            50% { opacity: .7; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
         }
 
         /* ===== PROGRESS BAR ===== */
@@ -789,35 +872,35 @@
             <div class="balas-list">
 
                 <!-- BALA 1 -->
-                <div class="bala-card">
+                <div class="bala-card warning">
                     <span class="bala-number">#1</span>
                     <div class="bala-concepto">Fee 11 - SinComentarios</div>
                     <div class="bala-quote">"Tengo 5 minutos ahora mientras me sirven el 1er plato, ¿lo hago yo?"</div>
-                    <span class="bala-status"><span class="dot"></span> Pendiente</span>
+                    <span class="bala-status"><span class="dot"></span> En curso · Nueva fecha 15 mayo</span>
                 </div>
 
                 <!-- BALA 2 -->
-                <div class="bala-card">
+                <div class="bala-card warning">
                     <span class="bala-number">#2</span>
                     <div class="bala-concepto">Fijo Canarias</div>
                     <div class="bala-quote">"No sé Rick"</div>
-                    <span class="bala-status"><span class="dot"></span> Pendiente</span>
+                    <span class="bala-status"><span class="dot"></span> En curso · Nueva fecha 15 mayo</span>
                 </div>
 
                 <!-- BALA 3 -->
-                <div class="bala-card">
+                <div class="bala-card warning">
                     <span class="bala-number">#3</span>
                     <div class="bala-concepto">Producto Clear - La joya de los memes</div>
                     <div class="bala-quote">"Since 1991"</div>
-                    <span class="bala-status"><span class="dot"></span> Pendiente</span>
+                    <span class="bala-status"><span class="dot"></span> Reunión martes próximo</span>
                 </div>
 
                 <!-- BALA 4 -->
-                <div class="bala-card">
+                <div class="bala-card almost-done">
                     <span class="bala-number">#4</span>
                     <div class="bala-concepto">Implementación Wolf</div>
                     <div class="bala-quote">"Hay que apretar ahí, llevamos mucho retraso y me consta que no es por parte de Wolf"</div>
-                    <span class="bala-status"><span class="dot"></span> Pendiente</span>
+                    <span class="bala-status"><span class="dot"></span> A puntito de cerrar</span>
                 </div>
 
             </div>
@@ -825,7 +908,7 @@
 
         <!-- COUNTDOWN -->
         <section class="countdown-section" id="countdownSection">
-            <div class="countdown-label">Tiempo restante para cumplir</div>
+            <div class="countdown-label" id="countdownLabel">Tiempo restante para cumplir</div>
             <div class="countdown" id="countdown">
                 <div class="countdown-unit">
                     <div class="countdown-number" id="days">--</div>
@@ -844,8 +927,11 @@
                     <div class="countdown-text">Segundos</div>
                 </div>
             </div>
-            <p class="countdown-deadline">Fecha límite: <strong>30 de abril de 2026 a las 23:59h</strong></p>
-            <div class="expired-msg">TIEMPO AGOTADO &mdash; Las promesas han expirado oficialmente</div>
+            <p class="countdown-deadline">Fecha límite original: <strong>30 de abril de 2026 a las 23:59h</strong></p>
+            <div class="expired-msg">
+                <strong>Deadline incumplido.</strong> Las promesas no se cumplieron en el plazo acordado.
+                <span class="new-date">Nueva fecha pactada: <strong>15 de mayo de 2026</strong></span>
+            </div>
         </section>
 
         <!-- PROGRESS -->
@@ -874,27 +960,28 @@
             const now = Date.now();
             const diff = DEADLINE - now;
             const section = document.getElementById('countdownSection');
+            const label = document.getElementById('countdownLabel');
 
-            if (diff <= 0) {
-                document.getElementById('days').textContent = '00';
-                document.getElementById('hours').textContent = '00';
-                document.getElementById('minutes').textContent = '00';
-                document.getElementById('seconds').textContent = '00';
-                section.classList.add('expired');
-                return;
-            }
+            const expired = diff <= 0;
+            const elapsed = Math.abs(diff);
 
-            section.classList.remove('expired');
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
 
             document.getElementById('days').textContent = String(days).padStart(2, '0');
             document.getElementById('hours').textContent = String(hours).padStart(2, '0');
             document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
             document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+
+            if (expired) {
+                section.classList.add('expired');
+                label.textContent = 'Tiempo en deuda · Deadline vencido';
+            } else {
+                section.classList.remove('expired');
+                label.textContent = 'Tiempo restante para cumplir';
+            }
         }
 
         // Animate progress bar (0% for now)
