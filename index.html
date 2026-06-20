@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promesas by Manuel Lustres</title>
-    <meta name="description" content="¿Llegaremos a mayo con alguna de estas promesas cumplidas? Permítanme dudarlo. Tic tac.">
+    <title>Operación Promesas · Misión Cumplida — Manuel Lustres</title>
+    <meta name="description" content="El pájaro está en el nido. Todos los objetivos asegurados. Volvemos a casa, chicos. 🎖️">
 
     <!-- Facebook Meta Tags -->
     <meta property="og:url" content="https://promesas-mega.vercel.app/">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Promesas by Manuel Lustres">
-    <meta property="og:description" content="¿Llegaremos a mayo con alguna de estas promesas cumplidas? Permítanme dudarlo. Tic tac.">
+    <meta property="og:title" content="Operación Promesas · Misión Cumplida — Manuel Lustres">
+    <meta property="og:description" content="El pájaro está en el nido. Todos los objetivos asegurados. Volvemos a casa, chicos. 🎖️">
     <meta property="og:image" content="https://promesas-mega.vercel.app/img/og-image.png">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:domain" content="promesas-mega.vercel.app">
     <meta property="twitter:url" content="https://promesas-mega.vercel.app/">
-    <meta name="twitter:title" content="Promesas by Manuel Lustres">
-    <meta name="twitter:description" content="¿Llegaremos a mayo con alguna de estas promesas cumplidas? Permítanme dudarlo. Tic tac.">
+    <meta name="twitter:title" content="Operación Promesas · Misión Cumplida — Manuel Lustres">
+    <meta name="twitter:description" content="El pájaro está en el nido. Todos los objetivos asegurados. Volvemos a casa, chicos. 🎖️">
     <meta name="twitter:image" content="https://promesas-mega.vercel.app/img/og-image.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -31,25 +31,27 @@
         }
 
         :root {
-            --bg-deep: #0a0e1a;
-            --bg-card: #111827;
-            --bg-card-hover: #1a2235;
+            --bg-deep: #0a0e12;
+            --bg-card: #111a16;
+            --bg-card-hover: #16221c;
             --primary: #3b82f6;
             --primary-light: #60a5fa;
-            --primary-glow: rgba(59, 130, 246, 0.15);
             --accent: #f59e0b;
             --accent-glow: rgba(245, 158, 11, 0.2);
-            --danger: #ef4444;
-            --danger-glow: rgba(239, 68, 68, 0.15);
             --success: #10b981;
-            --text: #f1f5f9;
-            --text-muted: #94a3b8;
-            --text-dim: #64748b;
-            --border: #1e293b;
-            --border-light: #334155;
+            --success-light: #34d399;
+            --success-soft: #6ee7b7;
+            --success-glow: rgba(16, 185, 129, 0.18);
+            --olive: #3d4a2a;
+            --text: #eef5ef;
+            --text-muted: #9bb0a3;
+            --text-dim: #647865;
+            --border: #1c2a22;
+            --border-light: #2f4034;
             --radius: 16px;
             --radius-sm: 10px;
             --shadow: 0 4px 24px rgba(0,0,0,.3);
+            --mono: 'Share Tech Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
         }
 
         html { scroll-behavior: smooth; }
@@ -72,9 +74,9 @@
             position: fixed;
             inset: 0;
             background-image:
-                linear-gradient(rgba(59,130,246,.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59,130,246,.03) 1px, transparent 1px);
-            background-size: 60px 60px;
+                linear-gradient(rgba(16,185,129,.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16,185,129,.04) 1px, transparent 1px);
+            background-size: 56px 56px;
             pointer-events: none;
             z-index: 0;
         }
@@ -86,9 +88,33 @@
             transform: translateX(-50%);
             width: 800px;
             height: 600px;
-            background: radial-gradient(ellipse, rgba(59,130,246,.08) 0%, transparent 70%);
+            background: radial-gradient(ellipse, rgba(16,185,129,.12) 0%, transparent 70%);
             pointer-events: none;
             z-index: 0;
+        }
+
+        /* ===== CONFETTI ===== */
+        .confetti-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 50;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            top: -24px;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            will-change: transform, opacity;
+            animation: confetti-fall linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0%   { transform: translateY(-24px) translateX(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(105vh) translateX(var(--drift, 0px)) rotate(720deg); opacity: .9; }
         }
 
         /* ===== CONTAINER ===== */
@@ -100,9 +126,30 @@
             padding: 0 1.25rem;
         }
 
+        /* ===== CLASSIFICATION BAR ===== */
+        .classif-bar {
+            font-family: var(--mono);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .5rem 1rem;
+            flex-wrap: wrap;
+            font-size: .68rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--success-soft);
+            opacity: .8;
+            padding: .6rem 0;
+            margin-top: .25rem;
+            border-bottom: 1px dashed rgba(16,185,129,.22);
+        }
+
+        .classif-bar .mid { color: var(--text-muted); opacity: .85; }
+        .classif-bar .blink { animation: lockBlink 1.6s steps(2, jump-none) infinite; }
+
         /* ===== HERO ===== */
         .hero {
-            padding: 25px 0 2rem;
+            padding: 1.75rem 0 2rem;
             display: grid;
             grid-template-columns: 1fr auto;
             gap: 2rem;
@@ -117,13 +164,13 @@
             display: inline-flex;
             align-items: center;
             gap: .5rem;
-            background: var(--danger-glow);
-            border: 1px solid rgba(239,68,68,.3);
-            color: #fca5a5;
-            font-size: .75rem;
-            font-weight: 600;
+            font-family: var(--mono);
+            background: var(--success-glow);
+            border: 1px solid rgba(16,185,129,.35);
+            color: var(--success-soft);
+            font-size: .72rem;
+            letter-spacing: .14em;
             text-transform: uppercase;
-            letter-spacing: .08em;
             padding: .4rem 1rem;
             border-radius: 100px;
             margin-bottom: 1rem;
@@ -132,14 +179,9 @@
         .hero-badge .pulse {
             width: 8px;
             height: 8px;
-            background: var(--danger);
+            background: var(--success);
             border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(239,68,68,.4); }
-            50% { opacity: .7; box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+            animation: pulseGreen 2s ease-in-out infinite;
         }
 
         .hero h1 {
@@ -147,38 +189,43 @@
             font-weight: 900;
             letter-spacing: -.04em;
             line-height: 1.05;
-            margin-bottom: .5rem;
+            margin-bottom: .65rem;
             text-transform: uppercase;
         }
 
         .hero h1 .accent {
-            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            background: linear-gradient(135deg, var(--success-soft), var(--success));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .hero .subtitle {
-            font-size: clamp(.95rem, 2vw, 1.1rem);
-            color: var(--text-muted);
-            font-weight: 400;
+            font-family: var(--mono);
+            font-size: clamp(.85rem, 2vw, 1.02rem);
+            color: var(--success-soft);
+            letter-spacing: .02em;
             max-width: 480px;
+            line-height: 1.5;
         }
 
-        /* ===== HERO IMAGES — TRANSITION ===== */
+        .hero .subtitle .sat { opacity: .85; margin-right: .25rem; }
+
+        /* ===== HERO IMAGE — TARGET SECURED ===== */
         .hero-image {
             flex-shrink: 0;
             display: flex;
             align-items: flex-start;
-            gap: 0;
+            justify-content: center;
             position: relative;
+            margin-bottom: 3.75rem;
         }
 
         .hero-image .avatar-wrap {
             position: relative;
             flex-shrink: 0;
-            width: clamp(110px, 14vw, 170px);
-            height: clamp(110px, 14vw, 170px);
+            width: clamp(120px, 15vw, 180px);
+            height: clamp(120px, 15vw, 180px);
         }
 
         .hero-image .avatar-wrap img {
@@ -187,263 +234,216 @@
             object-fit: cover;
             object-position: top center;
             border-radius: 50%;
-            border: 3px solid var(--border-light);
+            border: 3px solid rgba(16,185,129,.6);
             display: block;
         }
 
-        /* Manu — left, approaching aggressively (almost merging) */
+        /* Manu — the asset, gentle hold + green night-vision glow */
         .avatar-manu {
             z-index: 2;
-            animation: approach 3s ease-in-out infinite alternate;
+            animation: victoryFloat 3.5s ease-in-out infinite;
         }
 
         .avatar-manu img {
-            box-shadow: 0 0 30px rgba(59,130,246,.2), 0 0 60px rgba(59,130,246,.08);
-            filter: contrast(1.05) saturate(1.1);
+            box-shadow: 0 0 34px rgba(16,185,129,.4), 0 0 80px rgba(16,185,129,.12);
+            filter: contrast(1.05) saturate(1.12);
         }
 
-        @keyframes approach {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(42px); }
+        @keyframes victoryFloat {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-9px); }
         }
 
-        /* Pedro — also pulled toward Manu */
-        .avatar-pedro {
-            z-index: 1;
-            animation: approachPedro 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes approachPedro {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-22px); }
-        }
-
-        /* Arrow / morph indicator between them */
-        .morph-arrow {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            align-self: center;
-            gap: .35rem;
-            z-index: 3;
-            margin: 0 -.15rem;
-            animation: arrowPulse 2s ease-in-out infinite;
-            background: rgba(239,68,68,.08);
-            border: 1px solid rgba(239,68,68,.25);
-            border-radius: 12px;
-            padding: .5rem .6rem;
-        }
-
-        .morph-arrow svg {
-            filter: drop-shadow(0 0 8px rgba(239,68,68,.5));
-        }
-
-        .morph-arrow .morph-label {
-            font-size: .65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .12em;
-            color: var(--danger);
-            white-space: nowrap;
-            text-shadow: 0 0 10px rgba(239,68,68,.4);
-        }
-
-        @keyframes arrowPulse {
-            0%, 100% { opacity: .7; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
-
-        /* Pedro — right, the "final form" */
-        .avatar-pedro img {
-            box-shadow: 0 0 40px rgba(239,68,68,.15), 0 0 80px rgba(239,68,68,.06);
-            filter: grayscale(20%) contrast(1.05);
-            opacity: .85;
-        }
-
-        .avatar-pedro::after {
-            content: 'FINAL BOSS';
+        /* Target-lock reticle — corner brackets */
+        .reticle {
             position: absolute;
-            bottom: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: .75rem;
+            inset: -13px;
+            pointer-events: none;
+        }
+
+        .reticle i {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--success);
+            animation: lockBlink 2.4s ease-in-out infinite;
+        }
+
+        .reticle i:nth-child(1) { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .reticle i:nth-child(2) { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .reticle i:nth-child(3) { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .reticle i:nth-child(4) { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        @keyframes lockBlink {
+            0%, 100% { opacity: .9; }
+            50%      { opacity: .3; }
+        }
+
+        /* Secured badge on the avatar */
+        .avatar-manu .winner-check {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--success);
+            color: #04130d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
             font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: .1em;
-            color: #fca5a5;
-            background: rgba(239,68,68,.2);
-            border: 2px solid rgba(239,68,68,.45);
-            padding: .3rem .8rem;
-            border-radius: 100px;
-            white-space: nowrap;
-            text-shadow: 0 0 8px rgba(239,68,68,.4);
-            box-shadow: 0 0 15px rgba(239,68,68,.15);
+            line-height: 1;
+            border: 3px solid var(--bg-deep);
+            box-shadow: 0 0 16px rgba(16,185,129,.6);
+            z-index: 3;
         }
 
         .hero-image .caption {
             position: absolute;
-            left: 0;
-            right: 0;
+            left: 50%;
+            transform: translate(-50%, calc(100% + .9rem));
             bottom: 0;
-            transform: translateY(calc(100% + calc(.5rem + 15px)));
             text-align: center;
-            font-size: calc(.8rem + 3px);
-            color: var(--accent);
-            font-style: italic;
-            font-weight: 600;
-            letter-spacing: .03em;
-            text-shadow: 0 0 12px rgba(245,158,11,.3);
+            font-family: var(--mono);
+            font-size: calc(.85rem + 4px);
+            color: var(--success-soft);
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            text-shadow: 0 0 14px rgba(16,185,129,.4);
         }
 
-        /* Space for the FINAL BOSS badge + caption below */
-        .hero-image {
-            margin-bottom: 2.75rem;
+        .hero-image .caption .cap-code {
+            display: block;
+            font-size: .62rem;
+            color: var(--text-dim);
+            letter-spacing: .2em;
+            margin-bottom: .25rem;
         }
 
-        /* ===== COUNTDOWN ===== */
-        .countdown-section {
+        /* ===== MISSION DEBRIEF (CELEBRATION) ===== */
+        .celebration-section {
             margin: 2rem 0 2.5rem;
         }
 
-        .countdown-label {
-            text-align: center;
-            font-size: .8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: .1em;
-            color: var(--text-dim);
-            margin-bottom: 1rem;
-        }
-
-        .countdown {
-            display: flex;
-            justify-content: center;
-            gap: clamp(.5rem, 2vw, 1rem);
-            flex-wrap: wrap;
-        }
-
-        .countdown-unit {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.25rem 1rem;
-            min-width: clamp(70px, 15vw, 110px);
-            text-align: center;
+        .celebration {
             position: relative;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(16,185,129,.12), rgba(61,74,42,.12));
+            border: 1px solid rgba(16,185,129,.35);
+            border-radius: var(--radius);
+            padding: 2.75rem 1.5rem 2.5rem;
             overflow: hidden;
-            transition: border-color .3s;
         }
 
-        .countdown-unit::before {
+        .celebration::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            opacity: .6;
+            height: 4px;
+            background: linear-gradient(90deg, var(--success), var(--success-light), var(--accent));
         }
 
-        .countdown-unit:hover {
-            border-color: var(--border-light);
-        }
-
-        .countdown-number {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 800;
-            letter-spacing: -.02em;
-            line-height: 1;
-            color: var(--text);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .countdown-text {
-            font-size: .7rem;
-            font-weight: 600;
+        /* Rubber stamp */
+        .celebration .stamp {
+            position: absolute;
+            top: 16px;
+            right: 14px;
+            font-family: var(--mono);
             text-transform: uppercase;
+            text-align: center;
+            font-size: clamp(.5rem, 1.5vw, .75rem);
+            line-height: 1.05;
             letter-spacing: .1em;
-            color: var(--text-dim);
-            margin-top: .4rem;
+            color: rgba(16,185,129,.6);
+            border: 2px solid rgba(16,185,129,.45);
+            border-radius: 6px;
+            padding: .35rem .55rem;
+            transform: rotate(9deg);
+            box-shadow: inset 0 0 0 2px rgba(16,185,129,.12);
         }
 
-        .countdown-deadline {
-            text-align: center;
-            margin-top: 1rem;
-            font-size: .85rem;
-            color: var(--text-muted);
-        }
-
-        .countdown-deadline strong {
-            color: var(--accent);
-        }
-
-        /* ===== EXPIRED STATE ===== */
-        .expired .countdown-unit {
-            border-color: rgba(239,68,68,.3);
-        }
-
-        .expired .countdown-unit::before {
-            background: var(--danger);
-        }
-
-        .expired .countdown-number {
-            color: var(--danger);
-        }
-
-        .expired-msg {
-            display: none;
-            text-align: center;
-            padding: 1.25rem 1.5rem;
-            margin: 1.5rem 0 0;
-            background: var(--danger-glow);
-            border: 1px solid rgba(239,68,68,.35);
-            border-radius: var(--radius);
-            color: #fca5a5;
-            font-weight: 600;
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
-        .expired-msg strong {
-            color: #fee2e2;
-            font-weight: 800;
+        .celebration .comms-tag {
+            font-family: var(--mono);
+            font-size: .7rem;
+            letter-spacing: .2em;
             text-transform: uppercase;
-            letter-spacing: .05em;
+            color: var(--success-soft);
+            opacity: .8;
+            margin-bottom: .6rem;
         }
 
-        .expired-msg .new-date {
-            display: block;
-            margin-top: .75rem;
-            padding-top: .75rem;
-            border-top: 1px dashed rgba(239,68,68,.3);
-            font-size: .9rem;
-            color: var(--accent);
-            font-weight: 500;
+        .celebration .trophy {
+            font-size: 3.2rem;
+            line-height: 1;
+            display: inline-block;
+            animation: trophyPop 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 14px rgba(245,158,11,.45));
         }
 
-        .expired-msg .new-date strong {
-            color: var(--accent);
-            text-shadow: 0 0 10px rgba(245,158,11,.3);
+        @keyframes trophyPop {
+            0%, 100% { transform: translateY(0) rotate(-4deg); }
+            50%      { transform: translateY(-8px) rotate(4deg); }
         }
 
-        .expired .expired-msg {
-            display: block;
+        .celebration h2 {
+            font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -.01em;
+            margin: .7rem 0 .25rem;
+            background: linear-gradient(135deg, var(--success-soft), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Negative sign on numbers when expired */
-        .expired .countdown-number::before {
-            content: '−';
-            margin-right: .15rem;
-            color: var(--danger);
-            font-weight: 700;
+        .celebration .radio-line {
+            font-family: var(--mono);
+            color: var(--success-soft);
+            font-size: clamp(1rem, 2.6vw, 1.35rem);
+            letter-spacing: .03em;
+            margin: .2rem 0 .7rem;
         }
 
-        /* ===== BALAS LIST ===== */
+        .celebration p.brief {
+            color: var(--text-muted);
+            font-size: clamp(.9rem, 2vw, 1.05rem);
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        .celebration .badges {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: .6rem;
+            margin-top: 1.4rem;
+        }
+
+        .celebration .badges span {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            font-family: var(--mono);
+            font-size: .74rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            padding: .45rem .9rem;
+            border-radius: 100px;
+            background: rgba(16,185,129,.15);
+            color: var(--success-soft);
+            border: 1px solid rgba(16,185,129,.3);
+        }
+
+        /* ===== OBJETIVOS LIST ===== */
         .balas-section {
             margin-bottom: 3rem;
         }
-
 
         .balas-list {
             display: grid;
@@ -468,21 +468,22 @@
             top: 0;
             bottom: 0;
             width: 3px;
-            background: var(--danger);
+            background: var(--success);
         }
 
         .bala-card:hover {
-            border-color: var(--border-light);
+            border-color: rgba(16,185,129,.4);
             background: var(--bg-card-hover);
         }
 
         .bala-card .bala-number {
             position: absolute;
-            top: .4rem;
-            right: .75rem;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #fff;
+            top: .55rem;
+            right: .85rem;
+            font-family: var(--mono);
+            font-size: .82rem;
+            letter-spacing: .06em;
+            color: rgba(110,231,183,.6);
             line-height: 1;
             pointer-events: none;
         }
@@ -492,15 +493,16 @@
             font-size: 1.1rem;
             margin-bottom: .2rem;
             color: var(--text);
+            padding-right: 4rem;
         }
 
         .bala-card .bala-quote {
             font-style: italic;
-            color: var(--accent);
+            color: var(--success-soft);
             font-size: .9rem;
             margin-bottom: .4rem;
             padding-left: .5rem;
-            border-left: 2px solid var(--accent);
+            border-left: 2px solid var(--success);
             opacity: .85;
             line-height: 1.3;
             overflow-wrap: break-word;
@@ -510,79 +512,32 @@
         .bala-card .bala-status {
             display: inline-flex;
             align-items: center;
-            gap: .25rem;
-            font-size: .6rem;
-            font-weight: 600;
+            gap: .3rem;
+            font-family: var(--mono);
+            font-size: .64rem;
+            letter-spacing: .08em;
             text-transform: uppercase;
-            letter-spacing: .06em;
-            padding: .2rem .5rem;
+            padding: .22rem .55rem;
             border-radius: 100px;
-            background: var(--danger-glow);
-            color: #fca5a5;
-            border: 1px solid rgba(239,68,68,.25);
-        }
-
-        .bala-card .bala-status .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--danger);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        /* ===== BALA STATES — WARNING (ámbar) ===== */
-        .bala-card.warning::before {
-            background: var(--accent);
-        }
-
-        .bala-card.warning .bala-quote {
-            color: var(--accent);
-            border-left-color: var(--accent);
-        }
-
-        .bala-card.warning .bala-status {
-            background: var(--accent-glow);
-            color: #fcd34d;
-            border-color: rgba(245,158,11,.3);
-        }
-
-        .bala-card.warning .bala-status .dot {
-            background: var(--accent);
-            animation: pulseAmber 2s ease-in-out infinite;
-        }
-
-        @keyframes pulseAmber {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(245,158,11,.4); }
-            50% { opacity: .7; box-shadow: 0 0 0 6px rgba(245,158,11,0); }
-        }
-
-        /* ===== BALA STATES — ALMOST DONE (verde) ===== */
-        .bala-card.almost-done::before {
-            background: var(--success);
-        }
-
-        .bala-card.almost-done .bala-quote {
-            color: #6ee7b7;
-            border-left-color: var(--success);
-        }
-
-        .bala-card.almost-done .bala-status {
             background: rgba(16,185,129,.15);
-            color: #6ee7b7;
-            border-color: rgba(16,185,129,.3);
+            color: var(--success-soft);
+            border: 1px solid rgba(16,185,129,.3);
         }
 
-        .bala-card.almost-done .bala-status .dot {
+        .bala-card .bala-status .check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
             background: var(--success);
-            animation: pulseGreen 2s ease-in-out infinite;
+            color: #04130d;
+            font-size: .55rem;
+            font-weight: 900;
         }
 
-        @keyframes pulseGreen {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,.4); }
-            50% { opacity: .7; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
-        }
-
-        /* ===== PROGRESS BAR ===== */
+        /* ===== PROGRESS / OPERATIVIDAD ===== */
         .progress-section {
             margin-bottom: 2.5rem;
         }
@@ -595,17 +550,17 @@
         }
 
         .progress-label {
-            font-size: .8rem;
-            font-weight: 600;
+            font-family: var(--mono);
+            font-size: .74rem;
+            letter-spacing: .1em;
             text-transform: uppercase;
-            letter-spacing: .08em;
             color: var(--text-dim);
         }
 
         .progress-value {
-            font-size: .85rem;
-            font-weight: 700;
-            color: var(--danger);
+            font-family: var(--mono);
+            font-size: .82rem;
+            color: var(--success);
         }
 
         .progress-bar {
@@ -619,7 +574,7 @@
         .progress-fill {
             height: 100%;
             border-radius: 100px;
-            background: linear-gradient(90deg, var(--danger), var(--accent));
+            background: linear-gradient(90deg, var(--success), var(--success-light));
             transition: width 1.5s ease;
             width: 0%;
         }
@@ -633,24 +588,32 @@
         }
 
         .footer p {
-            font-size: .8rem;
+            font-family: var(--mono);
+            font-size: .74rem;
+            letter-spacing: .08em;
             color: var(--text-dim);
         }
 
         .footer .legal {
             margin-top: .5rem;
-            font-size: .7rem;
+            font-size: .68rem;
             color: var(--text-dim);
-            opacity: .6;
+            opacity: .65;
+        }
+
+        @keyframes pulseGreen {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,.4); }
+            50% { opacity: .7; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
         }
 
         /* ===== REDUCED MOTION ===== */
         @media (prefers-reduced-motion: reduce) {
             .avatar-manu,
-            .avatar-pedro,
-            .morph-arrow,
+            .trophy,
             .hero-badge .pulse,
-            .bala-card .bala-status .dot {
+            .reticle i,
+            .classif-bar .blink,
+            .confetti-piece {
                 animation: none;
             }
 
@@ -672,82 +635,48 @@
                 grid-template-columns: 1fr;
                 text-align: center;
                 gap: 0;
-                padding: 30px 0 1rem;
+                padding: 1.5rem 0 1rem;
             }
 
-            /* Images below title */
+            .classif-bar {
+                justify-content: center;
+                text-align: center;
+                font-size: .6rem;
+            }
+
+            .classif-bar .mid { width: 100%; order: 3; }
+
+            .hero .subtitle { margin: 0 auto; }
+
+            /* Image below title */
             .hero-image {
                 justify-content: center;
-                margin-bottom: 2.5rem;
+                margin-bottom: 3.75rem;
             }
 
             .hero-image .avatar-wrap {
-                width: clamp(80px, 22vw, 110px);
-                height: clamp(80px, 22vw, 110px);
+                width: clamp(100px, 26vw, 130px);
+                height: clamp(100px, 26vw, 130px);
             }
 
-            /* FINAL BOSS badge — just below avatar */
-            .avatar-pedro {
-                margin-bottom: 1.5rem;
+            .avatar-manu .winner-check {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
             }
 
-            .avatar-pedro::after {
-                font-size: .6rem;
-                padding: .2rem .6rem;
-                bottom: -16px;
-            }
-
-            /* Caption close to images */
             .hero-image .caption {
-                font-size: calc(.7rem + 3px);
-                transform: translateY(calc(100% + .4rem));
+                font-size: calc(.78rem + 3px);
+                transform: translate(-50%, calc(100% + .7rem));
             }
 
             /* Title tight to top */
             .hero h1 {
                 font-size: clamp(1.8rem, 7vw, 2.5rem);
-                margin-bottom: .4rem;
+                margin-bottom: .5rem;
             }
 
-            .hero .subtitle {
-                margin: 0 auto;
-                font-size: .9rem;
-            }
-
-            /* Reduce approach animation distance on mobile */
-            .avatar-manu {
-                animation-name: approach-mobile;
-            }
-
-            .avatar-pedro {
-                animation-name: approachPedro-mobile;
-            }
-
-            @keyframes approach-mobile {
-                0%   { transform: translateX(0); }
-                100% { transform: translateX(16px); }
-            }
-
-            @keyframes approachPedro-mobile {
-                0%   { transform: translateX(0); }
-                100% { transform: translateX(-8px); }
-            }
-
-            .morph-arrow {
-                padding: .35rem .45rem;
-            }
-
-            .morph-arrow svg:first-child {
-                width: 28px;
-                height: 28px;
-            }
-
-            .morph-arrow svg:last-of-type {
-                width: 22px;
-                height: 22px;
-            }
-
-            /* Balas section */
+            /* Objetivos section */
             .balas-section {
                 margin-bottom: 2rem;
             }
@@ -768,34 +697,24 @@
                 font-size: .8rem;
             }
 
-            /* Countdown — force single row */
-            .countdown-section {
+            /* Debrief */
+            .celebration-section {
                 margin: 1.5rem 0 2rem;
             }
 
-            .countdown {
-                flex-wrap: nowrap;
-                gap: .4rem;
+            .celebration {
+                padding: 2.5rem 1.25rem 2rem;
             }
 
-            .countdown-unit {
-                min-width: 0;
-                flex: 1;
-                padding: .75rem .25rem;
-                border-radius: var(--radius-sm);
-            }
-
-            .countdown-number {
-                font-size: clamp(1.4rem, 6vw, 1.8rem);
-            }
-
-            .countdown-text {
-                font-size: .55rem;
-                letter-spacing: .05em;
-            }
-
-            .countdown-deadline {
-                font-size: .8rem;
+            .celebration .stamp {
+                position: static;
+                display: block;
+                width: max-content;
+                max-width: 100%;
+                margin: 0 auto .9rem;
+                top: auto;
+                right: auto;
+                transform: rotate(-3deg);
             }
 
             /* Progress */
@@ -817,31 +736,11 @@
         /* ===== RESPONSIVE — SMALL MOBILE ===== */
         @media (max-width: 374px) {
             .hero-image .avatar-wrap {
-                width: 70px;
-                height: 70px;
+                width: 90px;
+                height: 90px;
             }
 
-            .morph-arrow svg:first-child {
-                width: 24px;
-                height: 24px;
-            }
-
-            .morph-arrow svg:last-of-type {
-                width: 18px;
-                height: 18px;
-            }
-
-            .morph-arrow .morph-label {
-                font-size: .55rem;
-            }
-
-            .countdown-unit {
-                padding: .6rem .2rem;
-            }
-
-            .countdown-number {
-                font-size: 1.3rem;
-            }
+            .hero-image .caption { font-size: calc(.68rem + 3px); }
 
             .bala-card .bala-concepto {
                 font-size: .85rem;
@@ -856,106 +755,101 @@
 <body>
     <div class="bg-grid"></div>
     <div class="bg-glow"></div>
+    <div class="confetti-container" id="confetti" aria-hidden="true"></div>
 
     <div class="container">
+        <!-- CLASSIFICATION BAR -->
+        <div class="classif-bar">
+            <span>// DESCLASIFICADO</span>
+            <span class="mid">OPERACIÓN PROMESAS · INFORME FINAL</span>
+            <span><span class="blink">●</span> CÓDIGO VERDE //</span>
+        </div>
+
         <!-- HERO -->
         <header class="hero">
             <div class="hero-text">
-                <h1>Promesas by<br><span class="accent">Manuel Lustres</span></h1>
-                <p class="subtitle">Registro oficial de compromisos pendientes de cumplimiento. Tic Tac.</p>
+                <div class="hero-badge">
+                    <span class="pulse"></span>
+                    Misión cumplida
+                </div>
+                <h1>Operación<br><span class="accent">Promesas</span></h1>
+                <p class="subtitle"><span class="sat">📡</span>«El pájaro está en el nido. Todos los objetivos asegurados. Volvemos a casa, chicos.»</p>
             </div>
             <div class="hero-image">
                 <div class="avatar-wrap avatar-manu">
-                    <img src="img/Manu.jpg" alt="Manuel Lustres">
+                    <span class="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                    <img src="img/Manu.jpg" alt="Comandante Manuel Lustres">
+                    <span class="winner-check" aria-hidden="true">✓</span>
                 </div>
-                <div class="morph-arrow">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="#ef4444" stroke="#0a0e1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13" stroke="#0a0e1a" stroke-width="2"/><circle cx="12" cy="16.5" r="1" fill="#0a0e1a" stroke="none"/></svg>
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-                    <span class="morph-label">Peligro</span>
-                </div>
-                <div class="avatar-wrap avatar-pedro">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Pedro_S%C3%A1nchez_in_2026.jpg" alt="Nivel final">
-                </div>
-                <div class="caption">"Próxima Digi-Evolución...?"</div>
+                <div class="caption"><span class="cap-code">// CMDT. LUSTRES</span>[ Objetivo conseguido ]</div>
             </div>
         </header>
 
-        <!-- BALAS -->
+        <!-- OBJETIVOS -->
         <section class="balas-section">
             <div class="hero-badge">
                 <span class="pulse"></span>
-                Promesas por cumplir
+                Objetivos asegurados
             </div>
             <div class="balas-list">
 
-                <!-- BALA 1 -->
-                <div class="bala-card warning">
-                    <span class="bala-number">#1</span>
+                <!-- OBJ 1 -->
+                <div class="bala-card done">
+                    <span class="bala-number">OBJ·01</span>
                     <div class="bala-concepto">Fee 11 - SinComentarios</div>
                     <div class="bala-quote">"Tengo 5 minutos ahora mientras me sirven el 1er plato, ¿lo hago yo?"</div>
-                    <span class="bala-status"><span class="dot"></span> En curso · Nueva fecha 15 mayo</span>
+                    <span class="bala-status"><span class="check">✓</span> Asegurado</span>
                 </div>
 
-                <!-- BALA 2 -->
-                <div class="bala-card warning">
-                    <span class="bala-number">#2</span>
+                <!-- OBJ 2 -->
+                <div class="bala-card done">
+                    <span class="bala-number">OBJ·02</span>
                     <div class="bala-concepto">Fijo Canarias</div>
                     <div class="bala-quote">"No sé Rick"</div>
-                    <span class="bala-status"><span class="dot"></span> En curso · Nueva fecha 15 mayo</span>
+                    <span class="bala-status"><span class="check">✓</span> Asegurado</span>
                 </div>
 
-                <!-- BALA 3 -->
-                <div class="bala-card warning">
-                    <span class="bala-number">#3</span>
+                <!-- OBJ 3 -->
+                <div class="bala-card done">
+                    <span class="bala-number">OBJ·03</span>
                     <div class="bala-concepto">Producto Clear - La joya de los memes</div>
                     <div class="bala-quote">"Since 1991"</div>
-                    <span class="bala-status"><span class="dot"></span> Reunión martes próximo</span>
+                    <span class="bala-status"><span class="check">✓</span> Asegurado</span>
                 </div>
 
-                <!-- BALA 4 -->
-                <div class="bala-card almost-done">
-                    <span class="bala-number">#4</span>
+                <!-- OBJ 4 -->
+                <div class="bala-card done">
+                    <span class="bala-number">OBJ·04</span>
                     <div class="bala-concepto">Implementación Wolf</div>
                     <div class="bala-quote">"Hay que apretar ahí, llevamos mucho retraso y me consta que no es por parte de Wolf"</div>
-                    <span class="bala-status"><span class="dot"></span> A puntito de cerrar</span>
+                    <span class="bala-status"><span class="check">✓</span> Asegurado</span>
                 </div>
 
             </div>
         </section>
 
-        <!-- COUNTDOWN -->
-        <section class="countdown-section" id="countdownSection">
-            <div class="countdown-label" id="countdownLabel">Tiempo restante para cumplir</div>
-            <div class="countdown" id="countdown">
-                <div class="countdown-unit">
-                    <div class="countdown-number" id="days">--</div>
-                    <div class="countdown-text">Días</div>
+        <!-- MISSION DEBRIEF -->
+        <section class="celebration-section">
+            <div class="celebration">
+                <span class="stamp" aria-hidden="true">Mission<br>Accomplished</span>
+                <div class="comms-tag">» Transmisión entrante · Canal seguro</div>
+                <div class="trophy">🎖️</div>
+                <h2>Misión cumplida</h2>
+                <p class="radio-line">«El pájaro está en el nido.»</p>
+                <p class="brief">Todos los objetivos han sido asegurados. Lo que empezó como una cuenta atrás termina en victoria. Volvemos a casa, chicos.</p>
+                <div class="badges">
+                    <span>✓ 4/4 Objetivos</span>
+                    <span>▲ 100% Operativo</span>
+                    <span>⌂ RTB · Regreso a base</span>
                 </div>
-                <div class="countdown-unit">
-                    <div class="countdown-number" id="hours">--</div>
-                    <div class="countdown-text">Horas</div>
-                </div>
-                <div class="countdown-unit">
-                    <div class="countdown-number" id="minutes">--</div>
-                    <div class="countdown-text">Minutos</div>
-                </div>
-                <div class="countdown-unit">
-                    <div class="countdown-number" id="seconds">--</div>
-                    <div class="countdown-text">Segundos</div>
-                </div>
-            </div>
-            <p class="countdown-deadline">Fecha límite original: <strong>30 de abril de 2026 a las 23:59h</strong></p>
-            <div class="expired-msg">
-                <strong>Deadline incumplido.</strong> Las promesas no se cumplieron en el plazo acordado.
-                <span class="new-date">Nueva fecha pactada: <strong>15 de mayo de 2026</strong></span>
             </div>
         </section>
 
-        <!-- PROGRESS -->
+        <!-- OPERATIVIDAD -->
         <div class="progress-section">
             <div class="progress-header">
-                <span class="progress-label">Promesas cumplidas</span>
-                <span class="progress-value">0 de 4 (0%)</span>
+                <span class="progress-label">Objetivos asegurados</span>
+                <span class="progress-value">4 / 4 · 100%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
@@ -964,50 +858,45 @@
 
         <!-- FOOTER -->
         <footer class="footer">
-            <p>Registro interno de promesas pendientes &mdash; Abril 2026</p>
-            <p class="legal">Este documento tiene carácter de recordatorio amistoso. Las excusas no detienen el contador.</p>
+            <p>// Fin de la transmisión · Cambio y corto.</p>
+            <p class="legal">Documento desclasificado · Todos los objetivos asegurados · Volvemos a casa.</p>
         </footer>
     </div>
 
     <script>
-        // Fecha límite: 30 de abril 2026 a las 23:59:59
-        const DEADLINE = new Date('2026-04-30T23:59:59').getTime();
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        function updateCountdown() {
-            const now = Date.now();
-            const diff = DEADLINE - now;
-            const section = document.getElementById('countdownSection');
-            const label = document.getElementById('countdownLabel');
+        // Operatividad al 100% — todos los objetivos asegurados
+        setTimeout(() => {
+            document.getElementById('progressFill').style.width = '100%';
+        }, 400);
 
-            const expired = diff <= 0;
-            const elapsed = Math.abs(diff);
-
-            const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = String(days).padStart(2, '0');
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-
-            if (expired) {
-                section.classList.add('expired');
-                label.textContent = 'Tiempo en deuda · Deadline vencido';
-            } else {
-                section.classList.remove('expired');
-                label.textContent = 'Tiempo restante para cumplir';
+        // Confetti de celebración 🎖️
+        function launchConfetti() {
+            if (reduceMotion) return;
+            const container = document.getElementById('confetti');
+            if (!container) return;
+            const colors = ['#10b981', '#34d399', '#6ee7b7', '#3d4a2a', '#f59e0b', '#fcd34d', '#ffffff'];
+            const count = 130;
+            for (let i = 0; i < count; i++) {
+                const piece = document.createElement('span');
+                piece.className = 'confetti-piece';
+                const size = 6 + Math.random() * 9;
+                piece.style.left = (Math.random() * 100) + 'vw';
+                piece.style.width = size + 'px';
+                piece.style.height = size + 'px';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                piece.style.animationDelay = (Math.random() * 3.5) + 's';
+                piece.style.animationDuration = (3 + Math.random() * 3) + 's';
+                piece.style.setProperty('--drift', (Math.random() * 240 - 120) + 'px');
+                container.appendChild(piece);
             }
+            // Limpieza para que el confeti no se repita indefinidamente
+            setTimeout(() => { container.innerHTML = ''; }, 9000);
         }
 
-        // Animate progress bar (0% for now)
-        setTimeout(() => {
-            document.getElementById('progressFill').style.width = '0%';
-        }, 500);
-
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+        launchConfetti();
     </script>
 </body>
 </html>
