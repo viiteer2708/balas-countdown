@@ -19,9 +19,7 @@ confeti incluido).
 - `index.html` — toda la página: estilos, contenido (hero, 4 tarjetas de objetivos,
   debrief, barra de progreso) y un script pequeño (barra al 100% + confeti).
 - `img/` — `Manu.jpg` (avatar del hero) y `og-image.png` (imagen para redes sociales).
-- `.gitignore` — solo ignora `.vercel`.
-- `.claude/skills/ui-ux-pro-max/` — skill de diseño usada durante su creación; no forma
-  parte de la web publicada.
+- `.gitignore` — ignora `.vercel` y `.claude/skills/ui-ux-pro-max/` (copia local de la skill de diseño usada al crearla; no forma parte del repo ni de la web).
 
 ## Comandos
 
